@@ -1,8 +1,35 @@
 import mensajeros.*
+import destinos.*
+import paquetes.*
 
 test "La mensajeria tiene a neo como empleado si lo agregarmos" {
 	mensajeria.contratar(neo)
 	assert.that(mensajeria.mensajeros().contains(neo))
+}
+
+test "la mensajeria tiene a neo como empleado y lo despide" {
+	mensajeria.contratar(neo)
+	assert.that(mensajeria.mensajeros().contains(neo))
+	mensajeria.despedir(neo)
+	assert.that(!mensajeria.mensajeros().contains(neo))
+}
+
+test "la mensajeria tiene a roberto,neo y chuck como empleados y los despide" {
+	mensajeria.contratar(neo)
+	mensajeria.contratar(chuckNorris)
+	mensajeria.contratar(roberto)
+	mensajeria.despedirATodos()
+	assert.that(mensajeria.mensajeros().isEmpty())
+}
+
+test "consultar si el paquete puede ser entregado por el primer empleado de la la empresa de mensajería." {
+	mensajeria.contratar(neo)
+	mensajeria.contratar(chuckNorris)
+	mensajeria.contratar(roberto)
+	paquete.pagar()
+	paquete.destino(puenteDeBrooklyn)
+	assert.that(mensajeria.puedeSerEntregadoPorElPrimero())
+	
 }
 
 test "Si neo es empleado, Hay un mensajero que puede enviar el paquete" {
@@ -10,4 +37,12 @@ test "Si neo es empleado, Hay un mensajero que puede enviar el paquete" {
 	paquete.pagar()
 	paquete.destino(matrix)
 	assert.that(mensajeria.mensajeros().contains(neo))
+}
+
+test "roberto (90kg) puede llevar un paquete que está pago en un camión que tiene un acoplado." {
+	paquete.pagar()
+	paquete.destino(puenteDeBrooklyn)
+	assert.equals(roberto.vehiculo(), camion)
+	assert.equals(camion.acoplados(), 1)
+	assert.equals(paquete.puedeSerEnviadoPor(roberto), true)
 }
