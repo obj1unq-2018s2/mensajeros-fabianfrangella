@@ -18,6 +18,7 @@ test "la mensajeria tiene a roberto,neo y chuck como empleados y los despide" {
 	mensajeria.contratar(neo)
 	mensajeria.contratar(chuckNorris)
 	mensajeria.contratar(roberto)
+	roberto.peso(90)
 	mensajeria.despedirATodos()
 	assert.that(mensajeria.mensajeros().isEmpty())
 }
@@ -26,10 +27,10 @@ test "consultar si el paquete puede ser entregado por el primer empleado de la l
 	mensajeria.contratar(neo)
 	mensajeria.contratar(chuckNorris)
 	mensajeria.contratar(roberto)
+	roberto.peso(90)
 	paquete.pagar()
 	paquete.destino(puenteDeBrooklyn)
 	assert.that(mensajeria.puedeSerEntregadoPorElPrimero())
-	
 }
 
 test "Si neo es empleado, Hay un mensajero que puede enviar el paquete" {
@@ -42,7 +43,38 @@ test "Si neo es empleado, Hay un mensajero que puede enviar el paquete" {
 test "roberto (90kg) puede llevar un paquete que está pago en un camión que tiene un acoplado." {
 	paquete.pagar()
 	paquete.destino(puenteDeBrooklyn)
+	roberto.peso(90)
 	assert.equals(roberto.vehiculo(), camion)
 	assert.equals(camion.acoplados(), 1)
 	assert.equals(paquete.puedeSerEnviadoPor(roberto), true)
+}
+
+test "el paquete puede ser enviado por cualquier empleado" {
+	mensajeria.contratar(neo)
+	mensajeria.contratar(chuckNorris)
+	mensajeria.contratar(roberto)
+	roberto.peso(90)
+	paquete.pagar()
+	paquete.destino(puenteDeBrooklyn)
+	assert.that(mensajeria.esFacilDeEntregar())
+}
+
+test "el paquete puede ser entregado por alguno de los empleados"{
+	mensajeria.contratar(neo)
+	mensajeria.contratar(chuckNorris)
+	mensajeria.contratar(roberto)
+	roberto.peso(90)
+	neo.tieneCredito(false)
+	paquete.pagar()
+	paquete.destino(matrix)
+	assert.that(mensajeria.puedeSerEntregadoPorAlguno())	
+}
+
+test "la mensajeria tiene sobre peso"{
+	mensajeria.contratar(neo)
+	mensajeria.contratar(chuckNorris)
+	mensajeria.contratar(roberto)
+	roberto.peso(50)
+	camion.acoplados(10)
+	assert.that(mensajeria.sobrePeso())
 }

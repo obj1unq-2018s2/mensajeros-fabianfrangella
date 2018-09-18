@@ -23,13 +23,24 @@ object mensajeria {
 
 	method pesoDelUltimoMensajero() = mensajeros.first().peso()
 
+	method puedeSerEntregadoPorAlguno() = mensajeros.any{ mensajero => paquete.puedeSerEnviadoPor(mensajero) }
+
+	method esFacilDeEntregar() = mensajeros.all{ mensajero => paquete.puedeSerEnviadoPor(mensajero) }
+
+	method sobrePeso() = mensajeros.sum{ mensajero => mensajero.peso() } / mensajeros.size() > 500
+
 }
 
 object roberto {
 
 	var property vehiculo = camion
+	var peso
 
-	method peso() = 90 + vehiculo.peso()
+	method peso(cuanto) {
+		peso = cuanto
+	}
+
+	method peso() = peso + vehiculo.peso()
 
 	method puedeLlamar() = false
 
