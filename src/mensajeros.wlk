@@ -4,6 +4,14 @@ import destinos.*
 object mensajeria {
 
 	var property mensajeros = []
+	var property paquetesEnviados = []
+	var property paquetesRecibidos = []
+	var property paquetesActuales = []
+
+	method recibirPaquete(unPaquete) {
+		paquetesRecibidos.add(unPaquete)
+		paquetesActuales.add(unPaquete)
+	}
 
 	method contratar(alguien) {
 		mensajeros.add(alguien)
@@ -19,15 +27,28 @@ object mensajeria {
 
 	method esGrande() = mensajeros.size() > 2
 
-	method puedeSerEntregadoPorElPrimero() = paquete.puedeSerEnviadoPor(mensajeros.first())
+	method puedeSerEntregadoPorElPrimero(paquete) = paquete.puedeSerEnviadoPor(mensajeros.first())
 
 	method pesoDelUltimoMensajero() = mensajeros.first().peso()
 
-	method puedeSerEntregadoPorAlguno() = mensajeros.any{ mensajero => paquete.puedeSerEnviadoPor(mensajero) }
+	method puedeSerEntregadoPorAlguno(paquete) = mensajeros.any{ mensajero => paquete.puedeSerEnviadoPor(mensajero) }
 
-	method esFacilDeEntregar() = mensajeros.all{ mensajero => paquete.puedeSerEnviadoPor(mensajero) }
+	method esFacilDeEntregar(paquete) = mensajeros.all{ mensajero => paquete.puedeSerEnviadoPor(mensajero) }
 
 	method sobrePeso() = mensajeros.sum{ mensajero => mensajero.peso() } / mensajeros.size() > 500
+
+	method enviarPaquete(paquete) {
+		if (self.puedeSerEntregadoPorAlguno(paquete)) {
+			paquetesEnviados.add(paquete)
+			paquetesActuales.remove(paquete)
+		} else {
+			self.error("No hay ningún mensajero que pueda entregar el paquete")
+		}
+	}
+
+	method enviarTodos() {
+		paquetesActuales.forEach{ paquete => self.enviarPaquete(paquete)}
+	}
 
 }
 

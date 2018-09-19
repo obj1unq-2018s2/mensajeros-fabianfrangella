@@ -30,7 +30,7 @@ test "consultar si el paquete puede ser entregado por el primer empleado de la l
 	roberto.peso(90)
 	paquete.pagar()
 	paquete.destino(puenteDeBrooklyn)
-	assert.that(mensajeria.puedeSerEntregadoPorElPrimero())
+	assert.that(mensajeria.puedeSerEntregadoPorElPrimero(paquete))
 }
 
 test "Si neo es empleado, Hay un mensajero que puede enviar el paquete" {
@@ -56,10 +56,10 @@ test "el paquete puede ser enviado por cualquier empleado" {
 	roberto.peso(90)
 	paquete.pagar()
 	paquete.destino(puenteDeBrooklyn)
-	assert.that(mensajeria.esFacilDeEntregar())
+	assert.that(mensajeria.esFacilDeEntregar(paquete))
 }
 
-test "el paquete puede ser entregado por alguno de los empleados"{
+test "el paquete puede ser entregado por alguno de los empleados" {
 	mensajeria.contratar(neo)
 	mensajeria.contratar(chuckNorris)
 	mensajeria.contratar(roberto)
@@ -67,10 +67,10 @@ test "el paquete puede ser entregado por alguno de los empleados"{
 	neo.tieneCredito(false)
 	paquete.pagar()
 	paquete.destino(matrix)
-	assert.that(mensajeria.puedeSerEntregadoPorAlguno())	
+	assert.that(mensajeria.puedeSerEntregadoPorAlguno(paquete))
 }
 
-test "la mensajeria tiene sobre peso"{
+test "la mensajeria tiene sobre peso" {
 	mensajeria.contratar(neo)
 	mensajeria.contratar(chuckNorris)
 	mensajeria.contratar(roberto)
@@ -78,3 +78,33 @@ test "la mensajeria tiene sobre peso"{
 	camion.acoplados(10)
 	assert.that(mensajeria.sobrePeso())
 }
+
+test "la empresa envia el paquete y tiene empleados que lo puedan enviar" {
+	mensajeria.contratar(neo)
+	mensajeria.contratar(chuckNorris)
+	mensajeria.contratar(roberto)
+	roberto.peso(50)
+	paquete.pagar()
+	paquete.destino(matrix)
+	mensajeria.recibirPaquete(paquete)
+	mensajeria.enviarPaquete(paquete)
+	assert.that(mensajeria.paquetesEnviados() == [ paquete ])
+}
+
+test "la empresa intenta enviar el paquete pero no tiene gente que lo pueda mandar" {
+	mensajeria.contratar(roberto)
+	roberto.peso(50)
+	paquete.pagar()
+	paquete.destino(matrix)
+	assert.throwsExceptionWithMessage("No hay ningún mensajero que pueda entregar el paquete", { mensajeria.enviarPaquete(paquete)})
+}
+
+test "la empresa tiene paquete,paquetito y paqueton"{
+	mensajeria.recibirPaquete(paquete)
+	mensajeria.recibirPaquete(paquetito)
+	mensajeria.recibirPaquete(paqueton)
+	paqueton.pagar(5000)
+	assert.equals([paquete,paquetito,paqueton],mensajeria.paquetesActuales())
+}
+
+
