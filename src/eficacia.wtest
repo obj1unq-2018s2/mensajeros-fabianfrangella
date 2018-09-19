@@ -1,0 +1,47 @@
+//Testear la siguiente situación:
+//
+//La mensajería recibe paquete y paquetito. Agregarle al menos un mejajero que pueda enviar paquetito, dejar paquete impago para que no se pueda enviar.
+//Le pedimos que envie todos los paquetes posibles.
+//Consultar la eficacia, tiene que dar 50%.
+//Agregar a paqueton y un mensajero que pueda enviarlo.
+//Enviar nuevamente todos los paquetes, y verificar la efiacia sube a 67% (o 66, depende cómo hayan redondeado, no es importante).
+//Registrar el pago del paquete y reintentar enviar todos.
+//Verificar la eficacia del 100%.
+import mensajeros.*
+import destinos.*
+import paquetes.*
+
+describe "eficacia"{
+	
+	fixture {
+		mensajeria.recibirPaquete(paquete)
+		mensajeria.recibirPaquete(paquetito)
+		mensajeria.contratar(chuckNorris)
+		paquete.destino(puenteDeBrooklyn)
+		paquetito.destino(matrix)
+	}
+	
+	test "se envian la mitad de los paquetes"{
+	
+		mensajeria.enviarTodos()
+		assert.equals(mensajeria.eficacia(),50)
+	}
+	
+	test "se agrega paqueton y un mensajero que puede enviarlo"{
+		mensajeria.contratar(neo)
+		mensajeria.recibirPaquete(paqueton)
+		paqueton.pagar(1000)
+		mensajeria.enviarTodos()
+		assert.equals(mensajeria.eficacia(),67)
+		
+	}
+	
+	test "se paga el paquete"{
+		mensajeria.contratar(neo)
+		mensajeria.recibirPaquete(paqueton)
+		paqueton.pagar(1000)
+		paquete.pagar()
+		mensajeria.enviarTodos()
+		assert.equals(mensajeria.eficacia(),100)
+	}
+}

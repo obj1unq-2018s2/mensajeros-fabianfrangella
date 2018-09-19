@@ -1,0 +1,47 @@
+import mensajeros.*
+import destinos.*
+import paquetes.*
+
+describe "test de la cuarta parte" {
+
+	fixture {
+		mensajeria.recibirPaquete(paquete)
+		mensajeria.recibirPaquete(paquetito)
+		mensajeria.recibirPaquete(paqueton)
+		mensajeria.contratar(neo)
+		mensajeria.contratar(roberto)
+		mensajeria.contratar(chuckNorris)
+		paquete.destino(puenteDeBrooklyn)
+		paquetito.destino(matrix)
+		paqueton.pagar(5000)
+		paquete.pagar()
+		roberto.peso(90)
+			
+	}
+	test "la empresa tiene paquete,paquetito y paqueton" {
+		assert.equals([ paquete, paquetito, paqueton ], mensajeria.paquetesActuales())
+	}
+	
+	test "se envian todos los paquetes"{
+		mensajeria.enviarTodos()
+		assert.that(mensajeria.paquetesActuales().isEmpty())
+	}
+	
+	test "el paquete mas caro"{
+		paquete.precio(1000)
+		assert.equals(mensajeria.paqueteMasCaro(),paquete)
+	}
+	
+	test "paquetesEnviados"{
+		mensajeria.enviarTodos()
+		assert.equals(mensajeria.paquetesEnviados(),[ paquete, paquetito, paqueton ])
+	}
+	
+	test "eficacia"{
+		mensajeria.enviarPaquete(paquetito)
+		assert.equals(mensajeria.eficacia(),34)
+	}
+	
+}
+
+

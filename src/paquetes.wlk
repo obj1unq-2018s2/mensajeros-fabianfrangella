@@ -2,7 +2,8 @@ import destinos.*
 
 object paquete {
 
-	var property estaPago
+	var property precio
+	var property estaPago = false
 	var property destino
 
 	method pagar() {
@@ -15,6 +16,7 @@ object paquete {
 
 object paquetito {
 
+	const property precio = 0
 	const property estaPago = true
 	var property destino
 
@@ -24,9 +26,9 @@ object paquetito {
 
 object paqueton {
 
-	const precio = 100
+	const property precio = 100
 	var totalPagado = 0
-	var property destinos = []
+	var destinos = [ matrix, puenteDeBrooklyn ]
 	var property estaPago = totalPagado.equals(destinos.size() * precio)
 
 	method pagar(cantidad) {
@@ -37,8 +39,12 @@ object paqueton {
 		totalPagado = destinos.size() * precio
 	}
 
+	method asignarDestinos(unaListaDeDestinos) {
+		destinos = unaListaDeDestinos
+	}
+
 	method puedeSerEnviadoPor(mensajero) {
-		destinos.all{ destino => destino.puedePasar(mensajero)}
+		return destinos.all{ destino => destino.puedePasar(mensajero) }
 	}
 
 }

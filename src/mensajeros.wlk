@@ -38,7 +38,7 @@ object mensajeria {
 	method sobrePeso() = mensajeros.sum{ mensajero => mensajero.peso() } / mensajeros.size() > 500
 
 	method enviarPaquete(paquete) {
-		if (self.puedeSerEntregadoPorAlguno(paquete)) {
+		if (self.sePuedeEnviar(paquete)) {
 			paquetesEnviados.add(paquete)
 			paquetesActuales.remove(paquete)
 		} else {
@@ -46,8 +46,20 @@ object mensajeria {
 		}
 	}
 
+	method sePuedeEnviar(paquete) {
+		return self.puedeSerEntregadoPorAlguno(paquete)
+	}
+
 	method enviarTodos() {
-		paquetesActuales.forEach{ paquete => self.enviarPaquete(paquete)}
+		paquetesActuales.forEach{ paquete =>
+			if (self.sePuedeEnviar(paquete)) self.enviarPaquete(paquete)
+		}
+	}
+
+	method paqueteMasCaro() = paquetesActuales.max{ paquete => paquete.precio() }
+
+	method eficacia() {
+		return (paquetesEnviados.size() / paquetesRecibidos.size() * 100).roundUp()
 	}
 
 }

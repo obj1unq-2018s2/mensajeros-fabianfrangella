@@ -99,12 +99,7 @@ test "la empresa intenta enviar el paquete pero no tiene gente que lo pueda mand
 	assert.throwsExceptionWithMessage("No hay ningún mensajero que pueda entregar el paquete", { mensajeria.enviarPaquete(paquete)})
 }
 
-test "la empresa tiene paquete,paquetito y paqueton"{
-	mensajeria.recibirPaquete(paquete)
-	mensajeria.recibirPaquete(paquetito)
-	mensajeria.recibirPaquete(paqueton)
-	paqueton.pagar(5000)
-	assert.equals([paquete,paquetito,paqueton],mensajeria.paquetesActuales())
-}
+
+
 
 
